@@ -33,6 +33,6 @@ buttonStudent = customtkinter.CTkButton(windowMenu, text="Student", command=butt
 buttonStudent.pack(anchor=CENTER)
 
 buttonMenu = customtkinter.CTkButton(studentEntry, text="Menu", command=buttonToMenu)
-buttonMenu.pack(anchor=CENTER, ipadx=20, ipady=20)
+buttonMenu.pack(anchor=CENTER)
 
 windowMenu.mainloop()

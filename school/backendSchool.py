@@ -2,6 +2,7 @@ import re
 import sqlite3
 
 onlyNumber = r'^([\s\d]+)$'
+onlyLetters = r'^[a-zA-Z]{1}[a-zA-Z]{1}'
 
 tableCreator = (
     "CREATE TABLE [IF NOT EXISTS] [school].student (StudentID INT PRIMARY KEY NOT NULL, FullName VARCHAR( "
@@ -9,7 +10,7 @@ tableCreator = (
 
 
 def create_table(student_id, full_name, age):
-    if re.match(onlyNumber, student_id):
+    if re.match(onlyNumber, student_id) and (full_name, onlyLetters) and (age, onlyNumber):
 
         conn = sqlite3.connect('school.sqlite')
         cursor = conn.cursor()
