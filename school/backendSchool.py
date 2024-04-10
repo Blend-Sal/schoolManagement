@@ -4,18 +4,13 @@ import sqlite3
 onlyNumber = r'^([\s\d]+)$'
 onlyLetters = r'^[a-zA-Z]{1}[a-zA-Z]{1}'
 
-tableCreator = (
-    "CREATE TABLE [IF NOT EXISTS] [school].student (StudentID INT PRIMARY KEY NOT NULL, FullName VARCHAR( "
-    "NOT NULL, Age INT NOT NULL DEFAULT 0,table_constraints) [WITHOUT ROWID];")
 
-
-def create_table(student_id, full_name, age):
-    if re.match(onlyNumber, student_id) and (full_name, onlyLetters) and (age, onlyNumber):
-
+def insertStudent(student_id, full_name, age):
+    if re.match(onlyNumber, student_id) and re.match(onlyLetters, full_name) and re.match(onlyNumber, age):
         conn = sqlite3.connect('school.sqlite')
         cursor = conn.cursor()
 
-        create_table_query = tableCreator
+        create_table_query = f"INSERT INTO student (StudentID, FullName, Age) VALUES ({student_id}, '{full_name}', {age})"
 
         cursor.execute(create_table_query)
 
@@ -23,5 +18,4 @@ def create_table(student_id, full_name, age):
         conn.close()
 
     else:
-        print("Only numbers allowed")
-
+        print("Invalid input. Only numbers allowed for ID and Age, and only letters for Full Name.")

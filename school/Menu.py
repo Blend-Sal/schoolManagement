@@ -1,6 +1,6 @@
 from tkinter import *
 import customtkinter
-from backendSchool import create_table
+from backendSchool import insertStudent
 
 windowMenu = customtkinter.CTk()
 studentEntry = customtkinter.CTk()
@@ -28,6 +28,12 @@ entryStudentName.pack(anchor=CENTER)
 
 entryStudentAge = customtkinter.CTkEntry(studentEntry)
 entryStudentAge.pack(anchor=CENTER)
+
+buttonStudentTable = customtkinter.CTkButton(studentEntry, text="Create Student",
+                                             command=insertStudent(entryStudentID.get(), entryStudentName.get(),
+                                                                   entryStudentAge.get()))
+
+buttonStudentTable.pack(anchor=CENTER)
 
 buttonStudent = customtkinter.CTkButton(windowMenu, text="Student", command=buttonToStudent)
 buttonStudent.pack(anchor=CENTER)
