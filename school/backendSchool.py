@@ -3,7 +3,7 @@ import re
 from tkinter import messagebox
 
 onlyNumber = r'^\d+$'
-onlyLetters = r'^[a-zA-Z]+$'
+onlyLetters = r'^[a-zA-Z\s]+$'
 onlyAge = r'^\d+$'
 
 
@@ -22,4 +22,3 @@ def insertStudent(student_id, full_name, age):
     else:
         print("Invalid input. Only numbers allowed for ID and Age, and only letters for Full Name.")
         messagebox.showerror("Invalid Input", "Please enter valid data.")
-

@@ -2,6 +2,7 @@ from tkinter import *
 import customtkinter as ctk
 from school.backendSchool import insertStudent
 
+
 windowMenu = ctk.CTk()
 studentEntry = ctk.CTk()
 windowMenu.title("Menu")
@@ -30,8 +31,9 @@ entryStudentAge = ctk.CTkEntry(studentEntry)
 entryStudentAge.pack(anchor=CENTER)
 
 buttonStudentTable = ctk.CTkButton(studentEntry, text="Create Student",
-                                   command=lambda: insertStudent(entryStudentID.get(), entryStudentName.get(),
-                                                                 entryStudentAge.get()))
+                                   command=lambda: insertStudent(entryStudentID.get().strip(),
+                                                                 entryStudentName.get().strip(),
+                                                                 entryStudentAge.get().strip()))
 buttonStudentTable.pack(anchor=CENTER)
 
 buttonStudent = ctk.CTkButton(windowMenu, text="Student", command=buttonToStudent)
@@ -41,5 +43,9 @@ buttonMenu = ctk.CTkButton(studentEntry, text="Menu", command=buttonToMenu)
 buttonMenu.pack(anchor=CENTER)
 
 buttonToQuit = ctk.CTkButton(windowMenu, text="Quit", command=windowMenu.destroy)
+buttonToQuit.pack(anchor=CENTER)
+
+buttonToQuitStudent = ctk.CTkButton(studentEntry, text="Quit", command=studentEntry.destroy)
+buttonToQuitStudent.pack(anchor=CENTER)
 
 windowMenu.mainloop()
