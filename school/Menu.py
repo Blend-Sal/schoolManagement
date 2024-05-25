@@ -1,11 +1,11 @@
 from tkinter import *
 import customtkinter as ctk
-from school.backendSchool import insertStudent, deleteStudent
+from school.backendSchool import *
 
 windowMenu = ctk.CTk()
 studentEntry = ctk.CTkToplevel()
 windowMenu.title("Menu")
-windowMenu.geometry("1280x720")
+windowMenu.geometry("1920x1080")
 
 
 def buttonToMenu():
@@ -16,41 +16,48 @@ def buttonToMenu():
 def buttonToStudent():
     windowMenu.withdraw()
     studentEntry.title("Student Entry")
-    studentEntry.geometry("1280x720")
+    studentEntry.geometry("1920x1080")
     studentEntry.deiconify()
 
 
-entryStudentID = (ctk.CTkEntry(studentEntry))
-entryStudentID.pack(anchor=CENTER)
+entryStudentID = ctk.CTkEntry(studentEntry, width=300, height=40, font=("Arial", 20))
+entryStudentID.pack(anchor=CENTER, pady=10)
 
-entryStudentName = ctk.CTkEntry(studentEntry)
-entryStudentName.pack(anchor=CENTER)
+entryStudentName = ctk.CTkEntry(studentEntry, width=300, height=40, font=("Arial", 20))
+entryStudentName.pack(anchor=CENTER, pady=10)
 
-entryStudentAge = ctk.CTkEntry(studentEntry)
-entryStudentAge.pack(anchor=CENTER)
+entryStudentAge = ctk.CTkEntry(studentEntry, width=300, height=40, font=("Arial", 20))
+entryStudentAge.pack(anchor=CENTER, pady=10)
 
-buttonStudentTable = ctk.CTkButton(studentEntry, text="Create Student",
+buttonStudentTable = ctk.CTkButton(studentEntry, text="Create Student", width=300, height=50, font=("Arial", 20),
                                    command=lambda: insertStudent(entryStudentID.get().strip(),
                                                                  entryStudentName.get().strip(),
                                                                  entryStudentAge.get().strip()))
-buttonStudentTable.pack(anchor=CENTER)
+buttonStudentTable.pack(anchor=CENTER, pady=10)
 
-buttonStudent = ctk.CTkButton(windowMenu, text="Student", command=buttonToStudent)
-buttonStudent.pack(anchor=CENTER)
+buttonStudent = ctk.CTkButton(windowMenu, text="Student", width=300, height=50, font=("Arial", 20),
+                              command=buttonToStudent)
+buttonStudent.pack(anchor=CENTER, pady=10)
 
-buttonMenu = ctk.CTkButton(studentEntry, text="Menu", command=buttonToMenu)
-buttonMenu.pack(anchor=CENTER)
+buttonMenu = ctk.CTkButton(studentEntry, text="Menu", width=300, height=50, font=("Arial", 20), command=buttonToMenu)
+buttonMenu.pack(anchor=CENTER, pady=10)
 
-buttonDeleteStudent = ctk.CTkButton(studentEntry, text="Delete Student",
+buttonDeleteStudent = ctk.CTkButton(studentEntry, text="Delete Student", width=300, height=50, font=("Arial", 20),
                                     command=lambda: deleteStudent(entryStudentID.get().strip(),
                                                                   entryStudentName.get().strip(),
                                                                   entryStudentAge.get().strip()))
-buttonDeleteStudent.pack(anchor=CENTER)
+buttonDeleteStudent.pack(anchor=CENTER, pady=10)
 
-buttonToQuit = ctk.CTkButton(windowMenu, text="Quit", command=windowMenu.destroy)
-buttonToQuit.pack(anchor=CENTER)
+buttontoUpdateStudent = ctk.CTkButton(studentEntry, text="Update Student", width=300, height=50, font=("Arial", 20),
+                                      command=lambda: updateStudent(entryStudentID.get().strip()))
+buttontoUpdateStudent.pack(anchor=CENTER, pady=10)
 
-buttonToQuitStudent = ctk.CTkButton(studentEntry, text="Quit", command=studentEntry.destroy)
-buttonToQuitStudent.pack(anchor=CENTER)
+buttonToQuit = ctk.CTkButton(windowMenu, text="Quit", width=300, height=50, font=("Arial", 20),
+                             command=windowMenu.destroy)
+buttonToQuit.pack(anchor=CENTER, pady=10)
+
+buttonToQuitStudent = ctk.CTkButton(studentEntry, text="Quit", width=300, height=50, font=("Arial", 20),
+                                    command=studentEntry.destroy)
+buttonToQuitStudent.pack(anchor=CENTER, pady=10)
 
 windowMenu.mainloop()

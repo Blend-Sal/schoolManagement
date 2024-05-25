@@ -42,3 +42,19 @@ def deleteStudent(student_id, full_name, age):
     else:
         print("Invalid input. Only numbers allowed for ID and Age, and only letters and spaces for Full Name.")
         messagebox.showerror("Invalid Input", "Please enter valid data for ID, Name, and Age.")
+
+
+def updateStudent(student_id):
+    if re.match(onlyNumber, student_id):
+        try:
+            with sqlite3.connect('C:\\Users\\49162\\PycharmProjects\\schoolManagement\\school\\school.sqlite') as conn:
+                cursor = conn.cursor()
+                cursor.execute("UPDATE Students SET Name = ? WHERE StudentID = ?", student_id)
+                conn.commit()
+                messagebox.showinfo("Success", "Student successfully updated in the database.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+            messagebox.showerror("Error", "An error occurred while adding the student to the database.")
+    else:
+        print("Invalid input. Only numbers allowed for ID and Age, and only letters for Full Name.")
+        messagebox.showerror("Invalid Input", "Please enter valid data.")
