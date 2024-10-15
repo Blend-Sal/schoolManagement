@@ -24,12 +24,20 @@ buttonToQuit = ctk.CTkButton(main_menu, text="Quit", width=300, height=50, font=
                              command=window.destroy)
 buttonToQuit.pack(anchor=CENTER, pady=10)
 
-# Student Menu Content
+labelStudentID = ctk.CTkLabel(student_menu, text="Student ID:", font=("Arial", 20))
+labelStudentID.pack(anchor=CENTER, pady=(20, 5))
+
 entryStudentID = ctk.CTkEntry(student_menu, width=300, height=40, font=("Arial", 20))
 entryStudentID.pack(anchor=CENTER, pady=10)
 
+labelStudentName = ctk.CTkLabel(student_menu, text="Student Name:", font=("Arial", 20))
+labelStudentName.pack(anchor=CENTER, pady=(20, 5))
+
 entryStudentName = ctk.CTkEntry(student_menu, width=300, height=40, font=("Arial", 20))
 entryStudentName.pack(anchor=CENTER, pady=10)
+
+labelStudentAge = ctk.CTkLabel(student_menu, text="Student Age:", font=("Arial", 20))
+labelStudentAge.pack(anchor=CENTER, pady=(20, 5))
 
 entryStudentAge = ctk.CTkEntry(student_menu, width=300, height=40, font=("Arial", 20))
 entryStudentAge.pack(anchor=CENTER, pady=10)
