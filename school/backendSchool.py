@@ -6,6 +6,19 @@ onlyNumber = r'^\d+$'
 onlyLetters = r'^[a-zA-Z\s]+$'
 onlyAge = r'^\d+$'
 
+ifTablenotExist = ("""
+            CREATE TABLE IF NOT EXISTS Students (
+                StudentID INT PRIMARY KEY,
+                Name VARCHAR(255) NOT NULL,
+                Age INT NOT NULL
+            )
+        """)
+
+insertStudentQuery = "INSERT INTO Students (StudentID, Name, Age) VALUES (%s, %s, %s)"
+deleteStudentQuery = "DELETE FROM Students WHERE StudentID = %s AND Name = %s AND Age = %s"
+updateStudentQuery = "UPDATE Students SET Name = %s WHERE StudentID = %s"
+
+
 def connect_db():
     try:
         conn = mysql.connector.connect(
@@ -18,32 +31,26 @@ def connect_db():
         messagebox.showerror("Error", f"Error connecting to MySQL: {err}")
         return None
 
+
 def create_table_if_not_exists(conn):
     try:
         cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS Students (
-                StudentID INT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Age INT NOT NULL
-            )
-        """)
+        cursor.execute(ifTablenotExist)
         conn.commit()
         cursor.close()
     except mysql.connector.Error as err:
         print(f"An error occurred while creating the table: {err}")
         messagebox.showerror("Error", f"An error occurred while ensuring the table exists: {err}")
 
+
 def insertStudent(student_id, full_name, age):
-    global cursor
     if re.match(onlyNumber, student_id) and re.match(onlyLetters, full_name) and re.match(onlyAge, age):
         conn = connect_db()
         if conn:
             try:
                 create_table_if_not_exists(conn)  # Ensure table exists before insertion
                 cursor = conn.cursor()
-                query = "INSERT INTO Students (StudentID, Name, Age) VALUES (%s, %s, %s)"
-                cursor.execute(query, (student_id, full_name, age))
+                cursor.execute(insertStudentQuery, (student_id, full_name, age))
                 conn.commit()
                 messagebox.showinfo("Success", "Student successfully added to the database.")
             except mysql.connector.Error as err:
@@ -66,8 +73,7 @@ def deleteStudent(student_id, full_name, age):
             try:
                 create_table_if_not_exists(conn)  # Ensure table exists before deletion
                 cursor = conn.cursor()
-                query = "DELETE FROM Students WHERE StudentID = %s AND Name = %s AND Age = %s"
-                cursor.execute(query, (student_id, full_name, age))
+                cursor.execute(deleteStudentQuery, (student_id, full_name, age))
                 conn.commit()
                 if cursor.rowcount > 0:
                     messagebox.showinfo("Success", "Student successfully deleted from the database.")
@@ -93,8 +99,7 @@ def updateStudent(student_id, new_name):
             try:
                 create_table_if_not_exists(conn)  # Ensure table exists before update
                 cursor = conn.cursor()
-                query = "UPDATE Students SET Name = %s WHERE StudentID = %s"
-                cursor.execute(query, (new_name, student_id))
+                cursor.execute(insertStudentQuery, (new_name, student_id))
                 conn.commit()
                 if cursor.rowcount > 0:
                     messagebox.showinfo("Success", "Student successfully updated in the database.")
