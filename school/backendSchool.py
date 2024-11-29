@@ -1,25 +1,62 @@
 import mysql.connector
 import re
 from tkinter import messagebox
+import logging
 
+# Regular expressions for validation
 onlyNumber = r'^\d+$'
 onlyLetters = r'^[a-zA-Z\s]+$'
 onlyAge = r'^\d+$'
 
-ifTablenotExist = ("""
-            CREATE TABLE IF NOT EXISTS Students (
-                StudentID INT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Age INT NOT NULL
-            )
-        """)
-
+# Queries
+ifTableNotExist = ("""
+    CREATE TABLE IF NOT EXISTS Students (
+        StudentID INT PRIMARY KEY,
+        Name VARCHAR(255) NOT NULL,
+        Age INT NOT NULL
+    )
+""")
 insertStudentQuery = "INSERT INTO Students (StudentID, Name, Age) VALUES (%s, %s, %s)"
 deleteStudentQuery = "DELETE FROM Students WHERE StudentID = %s AND Name = %s AND Age = %s"
 updateStudentQuery = "UPDATE Students SET Name = %s WHERE StudentID = %s"
 
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def connect_to_server():
+    """Establish a connection to the MySQL server."""
+    try:
+        conn = mysql.connector.connect(
+            host='localhost',
+            user='root'
+        )
+        return conn
+    except mysql.connector.Error as err:
+        messagebox.showerror("Error", f"Error connecting to MySQL server: {err}")
+        logging.error(f"Error connecting to MySQL server: {err}")
+        return None
+
+
+def ensure_database_exists():
+    """Ensure the `school` database exists."""
+    conn = connect_to_server()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("CREATE DATABASE IF NOT EXISTS school")
+            conn.commit()
+        except mysql.connector.Error as err:
+            logging.error(f"Error creating database: {err}")
+            messagebox.showerror("Error", f"Error creating database: {err}")
+        finally:
+            cursor.close()
+            conn.close()
+
 
 def connect_db():
+    """Establish a connection to the `school` database."""
+    ensure_database_exists()  # Ensure the database exists before connecting
     try:
         conn = mysql.connector.connect(
             host='localhost',
@@ -29,90 +66,85 @@ def connect_db():
         return conn
     except mysql.connector.Error as err:
         messagebox.showerror("Error", f"Error connecting to MySQL: {err}")
+        logging.error(f"Error connecting to MySQL: {err}")
         return None
 
 
-def create_table_if_not_exists(conn):
-    try:
-        cursor = conn.cursor()
-        cursor.execute(ifTablenotExist)
-        conn.commit()
-        cursor.close()
-    except mysql.connector.Error as err:
-        print(f"An error occurred while creating the table: {err}")
-        messagebox.showerror("Error", f"An error occurred while ensuring the table exists: {err}")
+def create_table_if_not_exists():
+    """Ensure the Students table exists in the database."""
+    conn = connect_db()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute(ifTableNotExist)
+            conn.commit()
+        except mysql.connector.Error as err:
+            logging.error(f"Error creating the table: {err}")
+            messagebox.showerror("Error", f"Error creating the table: {err}")
+        finally:
+            cursor.close()
+            conn.close()
+
+
+def validate_input(student_id, full_name=None, age=None):
+    """Validate student input data."""
+    if not re.match(onlyNumber, student_id):
+        messagebox.showerror("Invalid Input", "Student ID must be numeric.")
+        return False
+    if full_name and not re.match(onlyLetters, full_name):
+        messagebox.showerror("Invalid Input", "Name must contain only letters and spaces.")
+        return False
+    if age and not re.match(onlyAge, age):
+        messagebox.showerror("Invalid Input", "Age must be numeric.")
+        return False
+    return True
+
+
+def execute_query(query, params):
+    """Execute a query and return the cursor rowcount."""
+    conn = connect_db()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            conn.commit()
+            return cursor.rowcount
+        except mysql.connector.Error as err:
+            logging.error(f"Query Execution Error: {err}")
+            messagebox.showerror("Database Error", f"An error occurred: {err}")
+            return None
+        finally:
+            cursor.close()
+            conn.close()
+    return None
 
 
 def insertStudent(student_id, full_name, age):
-    if re.match(onlyNumber, student_id) and re.match(onlyLetters, full_name) and re.match(onlyAge, age):
-        conn = connect_db()
-        if conn:
-            try:
-                create_table_if_not_exists(conn)  # Ensure table exists before insertion
-                cursor = conn.cursor()
-                cursor.execute(insertStudentQuery, (student_id, full_name, age))
-                conn.commit()
-                messagebox.showinfo("Success", "Student successfully added to the database.")
-            except mysql.connector.Error as err:
-                print(f"An error occurred: {err}")
-                messagebox.showerror("Error", f"An error occurred while adding the student: {err}")
-            finally:
-                cursor.close()
-                conn.close()
+    """Insert a new student into the database."""
+    if validate_input(student_id, full_name, age):
+        create_table_if_not_exists()
+        rowcount = execute_query(insertStudentQuery, (int(student_id), full_name, int(age)))
+        if rowcount:
+            messagebox.showinfo("Success", "Student successfully added to the database.")
         else:
-            print("Database connection failed.")
-    else:
-        print("Invalid input. Only numbers allowed for ID and Age, and only letters for Full Name.")
-        messagebox.showerror("Invalid Input", "Please enter valid data.")
+            messagebox.showerror("Error", "An error occurred while adding the student.")
 
 
 def deleteStudent(student_id, full_name, age):
-    if re.match(onlyNumber, student_id) and re.match(onlyLetters, full_name) and re.match(onlyAge, age):
-        conn = connect_db()
-        if conn:
-            try:
-                create_table_if_not_exists(conn)  # Ensure table exists before deletion
-                cursor = conn.cursor()
-                cursor.execute(deleteStudentQuery, (student_id, full_name, age))
-                conn.commit()
-                if cursor.rowcount > 0:
-                    messagebox.showinfo("Success", "Student successfully deleted from the database.")
-                else:
-                    messagebox.showinfo("Not Found", "No student found with the given ID, Name, and Age.")
-            except mysql.connector.Error as err:
-                print(f"An error occurred: {err}")
-                messagebox.showerror("Error", f"An error occurred while deleting the student: {err}")
-            finally:
-                cursor.close()
-                conn.close()
+    """Delete a student from the database."""
+    if validate_input(student_id, full_name, age):
+        rowcount = execute_query(deleteStudentQuery, (int(student_id), full_name, int(age)))
+        if rowcount > 0:
+            messagebox.showinfo("Success", "Student successfully deleted from the database.")
         else:
-            print("Database connection failed.")
-    else:
-        print("Invalid input. Only numbers allowed for ID and Age, and only letters and spaces for Full Name.")
-        messagebox.showerror("Invalid Input", "Please enter valid data for ID, Name, and Age.")
+            messagebox.showinfo("Not Found", "No student found with the given ID, Name, and Age.")
 
 
 def updateStudent(student_id, new_name):
-    if re.match(onlyNumber, student_id) and re.match(onlyLetters, new_name):
-        conn = connect_db()
-        if conn:
-            try:
-                create_table_if_not_exists(conn)  # Ensure table exists before update
-                cursor = conn.cursor()
-                cursor.execute(insertStudentQuery, (new_name, student_id))
-                conn.commit()
-                if cursor.rowcount > 0:
-                    messagebox.showinfo("Success", "Student successfully updated in the database.")
-                else:
-                    messagebox.showinfo("Not Found", "No student found with the given ID.")
-            except mysql.connector.Error as err:
-                print(f"An error occurred: {err}")
-                messagebox.showerror("Error", f"An error occurred while updating the student: {err}")
-            finally:
-                cursor.close()
-                conn.close()
+    """Update a student's name in the database."""
+    if validate_input(student_id, full_name=new_name):
+        rowcount = execute_query(updateStudentQuery, (new_name, int(student_id)))
+        if rowcount > 0:
+            messagebox.showinfo("Success", "Student successfully updated in the database.")
         else:
-            print("Database connection failed.")
-    else:
-        print("Invalid input. Only numbers allowed for ID and only letters for Full Name.")
-        messagebox.showerror("Invalid Input", "Please enter valid data.")
+            messagebox.showinfo("Not Found", "No student found with the given ID.")
