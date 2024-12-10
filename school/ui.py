@@ -7,10 +7,12 @@ window = ctk.CTk()  # Create the main application window using CustomTkinter
 window.title("Menu")  # Set the title of the window
 window.geometry("1920x1080")  # Set the window size to full HD resolution
 
+
 # Function to switch between frames
 def show_frame(frame):
     """Bring the specified frame to the front."""
     frame.tkraise()
+
 
 # Frames for main menu and student menu
 main_menu = ctk.CTkFrame(window)  # Main menu frame
@@ -60,21 +62,20 @@ entryStudentAge.pack(anchor=CENTER, pady=10)
 buttonStudentTable = ctk.CTkButton(
     student_menu, text="Create Student", width=300, height=50, font=("Arial", 20),
     command=lambda: insertStudent(
-        entryStudentID.get().strip(),  # Get and clean the Student ID input
-        entryStudentName.get().strip(),  # Get and clean the Student Name input
-        entryStudentAge.get().strip()  # Get and clean the Student Age input
+        entryStudentID.get().strip(),
+        entryStudentName.get().strip(),
+        entryStudentAge.get().strip()
     )
 )
 buttonStudentTable.pack(anchor=CENTER, pady=10)
-
 
 # Delete student button
 buttonDeleteStudent = ctk.CTkButton(
     student_menu, text="Delete Student", width=300, height=50, font=("Arial", 20),
     command=lambda: deleteStudent(
-        entryStudentID.get().strip(),  # Get and clean the Student ID input
-        entryStudentName.get().strip(),  # Get and clean the Student Name input
-        entryStudentAge.get().strip()  # Get and clean the Student Age input
+        entryStudentID.get().strip(),
+        entryStudentName.get().strip(),
+        entryStudentAge.get().strip()
     )
 )
 buttonDeleteStudent.pack(anchor=CENTER, pady=10)
@@ -83,8 +84,9 @@ buttonDeleteStudent.pack(anchor=CENTER, pady=10)
 buttonToUpdateStudent = ctk.CTkButton(
     student_menu, text="Update Student", width=300, height=50, font=("Arial", 20),
     command=lambda: updateStudent(
-        entryStudentID.get().strip(),  # Get and clean the Student ID input
-        entryStudentName.get().strip()  # Get and clean the updated Student Name input
+        entryStudentID.get().strip(),
+        entryStudentName.get().strip(),
+        entryStudentAge.get().strip()
     )
 )
 buttonToUpdateStudent.pack(anchor=CENTER, pady=10)
@@ -95,7 +97,6 @@ buttonMenu = ctk.CTkButton(
     command=lambda: show_frame(main_menu)  # Navigate back to the main menu
 )
 buttonMenu.pack(anchor=CENTER, pady=10)
-
 
 # Quit button in the student menu
 buttonToQuitStudent = ctk.CTkButton(
