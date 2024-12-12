@@ -1,18 +1,16 @@
-from tkinter import *
+from school.backend.db_operations import *  # Import backend database functions
 import customtkinter as ctk
-from school.db_operations import *  # Import backend database functions
+from tkinter import *
+
 
 # Main window configuration
 window = ctk.CTk()  # Create the main application window using CustomTkinter
 window.title("Menu")  # Set the title of the window
 window.geometry("1920x1080")  # Set the window size to full HD resolution
 
-
-# Function to switch between frames
 def show_frame(frame):
     """Bring the specified frame to the front."""
     frame.tkraise()
-
 
 # Frames for main menu and student menu
 main_menu = ctk.CTkFrame(window)  # Main menu frame

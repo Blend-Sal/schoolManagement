@@ -1,2 +1,2 @@
 # main.py
-from ui import *
+from school.userinterface.registerui import *

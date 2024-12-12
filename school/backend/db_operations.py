@@ -1,23 +1,23 @@
-from tkinter.messagebox import showerror
-import mysql.connector
-from school.db_validation import *
-from tkinter import messagebox
-import logging
-from school.db_securefeatures import *
-
+from school.backend.db_validation import *
+from school.backend.db_securefeatures import *
 
 insertStudentQuery = "INSERT INTO Students (StudentID, Name, Age) VALUES (%s, %s, %s)"
 deleteStudentQuery = "DELETE FROM Students WHERE StudentID = %s AND Name = %s AND Age = %s"
 updateStudentQuery = "UPDATE Students SET Name = %s,    Age = %s WHERE StudentID = %s"
-insertRegisterName = "INSERT INTO Students (StudentID, Name, Age) VALUES (%s, %s, %s)"
+insertRegisterQuery = "INSERT INTO Students (Name, Age, password) VALUES (%s, %s, %s)"
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def insertRegisterStudent(full_name, age, password):
-    if validate_input_Teacher(full_name, age, password):
+    if valitade_input_Register(full_name, age, password):
         create_table_if_not_exists_student()
+        rowcount = execute_query(insertRegisterStudent, (full_name, age, password))
+        if rowcount:
+            messagebox.showinfo("Successfully Registered", "You successfully registered")
+        else:
+            messagebox.showerror("Not successfully Registered", "Student not Registered")
 
 
 def insertStudent(student_id, full_name, age):

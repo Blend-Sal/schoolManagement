@@ -1,6 +1,4 @@
-from tkinter import *
-import customtkinter as ctk
-from school.db_operations import *
+from school.backend.db_operations import *
 from tkinter import messagebox
 import re
 
