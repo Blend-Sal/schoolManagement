@@ -21,6 +21,8 @@ registerEntryPassword.pack(anchor=CENTER, pady=10)
 insertRegisterButton = ctk.CTkButton(text="Register", command=lambda:handle_insert_register())
 insertRegisterButton.pack(anchor=CENTER, pady=10)
 
-registerToTeacher = ctk.CTkButton(text="Login")
+registerToTeacher = ctk.CTkButton(text="Login", )
+
+show_frame(registerWindow)
 
 registerWindow.mainloop()

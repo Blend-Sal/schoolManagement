@@ -8,6 +8,9 @@ onlyAge = r'^\d+$'
 onlyPassword = r'^[a-zA-Z0-9\s]+$'
 
 
+#def if_teacher_exists(full_name, age, password):
+
+
 def validate_input_Teacher(student_id, full_name=None, age=None):
     """Validate student input data."""
     if not re.match(onlyNumber, student_id):

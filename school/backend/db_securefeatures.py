@@ -12,6 +12,13 @@ ifTableNotExist = ("""
     )
 """)
 
+ifTableNotExistRegister = ("""
+    CREATE TABLE IF NOT EXISTS Teacher (
+        TeacherID INT PRIMARY KEY,
+        Name VARCHAR(255) NOT NULL,
+        Password CHAR(64) NOT NULL
+    )
+""")
 def connect_to_server():
     """Establish a connection to the MySQL server."""
     try:

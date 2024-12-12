@@ -102,9 +102,5 @@ buttonToQuitStudent = ctk.CTkButton(
     command=window.destroy  # Close the application
 )
 buttonToQuitStudent.pack(anchor=CENTER, pady=10)
-
-# Show the main menu frame on startup
-show_frame(main_menu)
-
 # Run the application
 window.mainloop()
