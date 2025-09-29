@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %
 
 def insertRegisterStudent(full_name, age, password):
     if valitade_input_Register(full_name, age, password):
-        create_table_if_not_exists_student()
+        create_table_if_not_exists_teacher()
         rowcount = execute_query(insertRegisterStudent, (full_name, age, password))
         if rowcount:
             messagebox.showinfo("Successfully Registered", "You successfully registered")

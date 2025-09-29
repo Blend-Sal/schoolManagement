@@ -48,6 +48,20 @@ def ensure_database_exists():
             cursor.close()
             conn.close()
 
+def ensure_database_exists_teacher():
+    """Ensure the `school` database exists."""
+    conn = connect_to_server()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("CREATE DATABASE IF NOT EXISTS school")
+            conn.commit()
+        except mysql.connector.Error as err:
+            logging.error(f"Error creating database: {err}")
+            messagebox.showerror("Error", f"Error creating database: {err}")
+        finally:
+            cursor.close()
+            conn.close()
 
 def connect_db():
     """Establish a connection to the `school` database."""
@@ -81,6 +95,23 @@ def create_table_if_not_exists_student():
         finally:
             cursor.close()
             conn.close()
+            
+
+def create_table_if_not_exists_teacher():
+    """Ensure the Students table exists in the database."""
+    conn = connect_db()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute(ifTableNotExistRegister)
+            conn.commit()
+        except mysql.connector.Error as err:
+            logging.error(f"Error creating the table: {err}")
+            messagebox.showerror("Error", f"Error creating the table: {err}")
+        finally:
+            cursor.close()
+            conn.close()
+
 
 
 def execute_query(query, params):
